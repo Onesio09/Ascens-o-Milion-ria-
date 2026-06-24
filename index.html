@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Calculadora Profissional</title>
+  <title>Hub de Ferramentas</title>
   <style>
     body {
       font-family: Poppins, sans-serif;
@@ -18,13 +18,13 @@
       border-radius: 12px;
       box-shadow: 0 6px 16px rgba(0,0,0,0.1);
       text-align: center;
-      width: 320px;
+      width: 360px;
     }
     h2 {
       margin-bottom: 15px;
       color: #333;
     }
-    input[type="email"], button {
+    input, button, select {
       width: 100%;
       padding: 12px;
       margin: 8px 0;
@@ -42,9 +42,14 @@
     button:hover {
       background: #005fa3;
     }
-    .calculator {
+    .tools {
       display: none;
       margin-top: 20px;
+    }
+    .tool {
+      display: none;
+      margin-top: 15px;
+      text-align: left;
     }
     .calc-display {
       width: 100%;
@@ -69,48 +74,119 @@
       border: none;
       background: #e0e6ed;
       cursor: pointer;
-      transition: background 0.2s;
     }
     .calc-buttons button:hover {
       background: #cfd8e3;
-    }
-    .calc-buttons button.operator {
-      background: #0077cc;
-      color: #fff;
-    }
-    .calc-buttons button.operator:hover {
-      background: #005fa3;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Registre-se para usar a calculadora</h2>
+    <h2>Registre-se para usar as ferramentas</h2>
     <input type="email" id="email" placeholder="Digite seu email">
     <button onclick="registrar()">Registrar</button>
     
-    <div class="calculator" id="calculator">
-      <input type="text" id="display" class="calc-display" disabled>
-      <div class="calc-buttons">
-        <button onclick="press('7')">7</button>
-        <button onclick="press('8')">8</button>
-        <button onclick="press('9')">9</button>
-        <button class="operator" onclick="press('/')">÷</button>
-        <button onclick="press('4')">4</button>
-        <button onclick="press('5')">5</button>
-        <button onclick="press('6')">6</button>
-        <button class="operator" onclick="press('*')">×</button>
-        <button onclick="press('1')">1</button>
-        <button onclick="press('2')">2</button>
-        <button onclick="press('3')">3</button>
-        <button class="operator" onclick="press('-')">−</button>
-        <button onclick="press('0')">0</button>
-        <button onclick="press('.')">.</button>
-        <button onclick="calculate()">=</button>
-        <button class="operator" onclick="press('+')">+</button>
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="backspace()">⌫</button>
-        <button onclick="press('%')">%</button>
+    <div class="tools" id="tools">
+      <h3>Escolha uma ferramenta:</h3>
+      <select id="toolSelect" onchange="mostrarFerramenta()">
+        <option value="">--Selecione--</option>
+        <option value="calcBasica">Calculadora Básica</option>
+        <option value="calcCientifica">Calculadora Científica</option>
+        <option value="conversorMoedas">Conversor de Moedas</option>
+        <option value="conversorUnidades">Conversor de Unidades</option>
+        <option value="jurosCompostos">Simulador de Juros Compostos</option>
+        <option value="porcentagem">Calculadora de Porcentagem</option>
+        <option value="imc">Calculadora de IMC</option>
+      </select>
+      
+      <!-- Calculadora Básica -->
+      <div class="tool" id="calcBasica">
+        <input type="text" id="display" class="calc-display" disabled>
+        <div class="calc-buttons">
+          <button onclick="press('7')">7</button>
+          <button onclick="press('8')">8</button>
+          <button onclick="press('9')">9</button>
+          <button onclick="press('/')">÷</button>
+          <button onclick="press('4')">4</button>
+          <button onclick="press('5')">5</button>
+          <button onclick="press('6')">6</button>
+          <button onclick="press('*')">×</button>
+          <button onclick="press('1')">1</button>
+          <button onclick="press('2')">2</button>
+          <button onclick="press('3')">3</button>
+          <button onclick="press('-')">−</button>
+          <button onclick="press('0')">0</button>
+          <button onclick="press('.')">.</button>
+          <button onclick="calculate()">=</button>
+          <button onclick="press('+')">+</button>
+          <button onclick="clearDisplay()">C</button>
+          <button onclick="backspace()">⌫</button>
+        </div>
+      </div>
+      
+      <!-- Calculadora Científica -->
+      <div class="tool" id="calcCientifica">
+        <input type="text" id="displaySci" class="calc-display" disabled>
+        <div class="calc-buttons">
+          <button onclick="pressSci('Math.sin(')">sin</button>
+          <button onclick="pressSci('Math.cos(')">cos</button>
+          <button onclick="pressSci('Math.tan(')">tan</button>
+          <button onclick="pressSci('Math.log(')">log</button>
+          <button onclick="pressSci('Math.sqrt(')">√</button>
+          <button onclick="pressSci('**')">^</button>
+          <button onclick="calculateSci()">=</button>
+          <button onclick="clearSci()">C</button>
+        </div>
+      </div>
+      
+      <!-- Conversor de Moedas -->
+      <div class="tool" id="conversorMoedas">
+        <label>Valor em USD:</label>
+        <input type="number" id="usd" placeholder="Digite valor em USD">
+        <label>Taxa de câmbio (USD → EUR):</label>
+        <input type="number" id="taxa" value="0.92">
+        <button onclick="converterMoeda()">Converter</button>
+        <p id="resultadoMoeda"></p>
+      </div>
+      
+      <!-- Conversor de Unidades -->
+      <div class="tool" id="conversorUnidades">
+        <label>Metros:</label>
+        <input type="number" id="metros">
+        <button onclick="converterUnidade()">Converter para Km</button>
+        <p id="resultadoUnidade"></p>
+      </div>
+      
+      <!-- Simulador de Juros Compostos -->
+      <div class="tool" id="jurosCompostos">
+        <label>Capital inicial:</label>
+        <input type="number" id="capital">
+        <label>Taxa (% ao ano):</label>
+        <input type="number" id="taxaJuros">
+        <label>Anos:</label>
+        <input type="number" id="anos">
+        <button onclick="simularJuros()">Simular</button>
+        <p id="resultadoJuros"></p>
+      </div>
+      
+      <!-- Calculadora de Porcentagem -->
+      <div class="tool" id="porcentagem">
+        <label>Valor:</label>
+        <input type="number" id="valorPorcentagem">
+        <label>Percentual (%):</label>
+        <input type="number" id="percentual">
+        <button onclick="calcularPorcentagem()">Calcular</button>
+        <p id="resultadoPorcentagem"></p>
+      </div>
+      
+      <!-- Calculadora de IMC -->
+      <div class="tool" id="imc">
+        <label>Peso (kg):</label>
+        <input type="number" id="peso">
+        <label>Altura (m):</label>
+        <input type="number" id="altura">
+        <button onclick="calcularIMC()">Calcular IMC</button>
+        <p id="resultadoIMC"></p>
       </div>
     </div>
   </div>
@@ -120,28 +196,19 @@
       const email = document.getElementById("email").value;
       const regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
       if(regex.test(email)) {
-        document.getElementById("calculator").style.display = "block";
+        document.getElementById("tools").style.display = "block";
       } else {
         alert("Por favor, insira um email válido.");
       }
     }
-    function press(value) {
-      document.getElementById("display").value += value;
+    function mostrarFerramenta() {
+      const tools = document.querySelectorAll(".tool");
+      tools.forEach(t => t.style.display = "none");
+      const selected = document.getElementById("toolSelect").value;
+      if(selected) document.getElementById(selected).style.display = "block";
     }
-    function calculate() {
-      try {
-        document.getElementById("display").value = eval(document.getElementById("display").value);
-      } catch {
-        alert("Expressão inválida");
-      }
-    }
-    function clearDisplay() {
-      document.getElementById("display").value = "";
-    }
-    function backspace() {
-      let current = document.getElementById("display").value;
-      document.getElementById("display").value = current.slice(0, -1);
-    }
-  </script>
-</body>
-  </html>
+    // Calculadora Básica
+    function press(value) { document.getElementById("display").value += value; }
+    function calculate() { try { document.getElementById("display").value = eval(document.getElementById("display").value); } catch { alert("Expressão inválida"); } }
+    function clearDisplay() { document.getElementById("display").value = ""; }
+    function backspace() { let current = document.getElementById("display").value; document.getElementById("display").
